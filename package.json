@@ -1,5 +1,5 @@
 {
-  "name": "react-inspector",
+  "name": "@gamma-js/react-inspector",
   "version": "6.0.1",
   "description": "Power of Browser DevTools inspectors right inside your React app",
   "keywords": [
@@ -20,13 +20,13 @@
     "ui",
     "view"
   ],
-  "homepage": "https://github.com/xyc/react-inspector",
+  "homepage": "https://github.com/gamma-js/react-inspector",
   "bugs": {
-    "url": "https://github.com/xyc/react-inspector/issues"
+    "url": "https://github.com/gamma-js/react-inspector/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xyc/react-inspector.git"
+    "url": "https://github.com/gamma-js/react-inspector.git"
   },
   "license": "MIT",
   "author": "Xiaoyi Chen <cxychina@gmail.com> (http://github.com/xyc)",

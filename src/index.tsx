@@ -15,6 +15,8 @@ export { TableInspector, ObjectInspector, ObjectLabel, ObjectPreview, ObjectRoot
 
 import React, { ComponentProps, FC } from 'react';
 import isDOM from 'is-dom';
+import * as ReactIs from 'react-is';
+import { VDOMInspector } from './vdom-inspector/VDOMInspector';
 
 export const Inspector: FC<TableInspectorProps | ObjectInspectorProps> = ({ table = false, data, ...rest }) => {
   if (table) {
@@ -22,6 +24,8 @@ export const Inspector: FC<TableInspectorProps | ObjectInspectorProps> = ({ tabl
   }
 
   if (isDOM(data)) return <DOMInspector data={data} {...rest} />;
+
+  if (ReactIs.isElement(data)) return <VDOMInspector data={data} {...rest} />;
 
   return <ObjectInspector data={data} {...rest} />;
 };

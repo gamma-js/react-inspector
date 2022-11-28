@@ -1,45 +1,64 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 
-import { DOMNodePreview } from './DOMNodePreview';
-import { TreeView } from '../tree-view/TreeView';
+import { createDOMNodePreview } from './DOMNodePreview';
+import { TreeView, TreeViewProps } from '../tree-view/TreeView';
 
 import { shouldInline } from './shouldInline';
 import { themeAcceptor } from '../styles';
 
-const domIterator = function* (data: any) {
-  if (data && data.childNodes) {
-    const textInlined = shouldInline(data);
+function createDOMIterator(getTagName = (n: DOMNodeLike) => n.tagName) {
+  return function* (data: any) {
+    if (data && data.childNodes) {
+      const textInlined = shouldInline(data);
 
-    if (textInlined) {
-      return;
+      if (textInlined) {
+        return;
+      }
+
+      for (let i = 0; i < data.childNodes.length; i++) {
+        const node = data.childNodes[i];
+
+        if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length === 0) continue;
+
+        yield {
+          name: `${node.tagName}[${i}]`,
+          data: node,
+        };
+      }
+
+      // at least 1 child node
+      if (data.tagName) {
+        yield {
+          name: 'CLOSE_TAG',
+          data: {
+            tagName: getTagName(data),
+          },
+          isCloseTag: true,
+        };
+      }
     }
+  };
+}
 
-    for (let i = 0; i < data.childNodes.length; i++) {
-      const node = data.childNodes[i];
+export interface DOMNodeLike {
+  tagName: string;
+  attributes: { [key: string]: any };
+  textContent: string;
+  childNodes?: DOMNodeLike[];
+}
 
-      if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length === 0) continue;
+export interface DOMInspectorProps extends TreeViewProps<DOMNodeLike> {
+  getTagName?: (node: DOMNodeLike) => string;
+}
 
-      yield {
-        name: `${node.tagName}[${i}]`,
-        data: node,
-      };
-    }
-
-    // at least 1 child node
-    if (data.tagName) {
-      yield {
-        name: 'CLOSE_TAG',
-        data: {
-          tagName: data.tagName,
-        },
-        isCloseTag: true,
-      };
-    }
-  }
-};
-
-const DOMInspector: FC<any> = (props) => {
-  return <TreeView nodeRenderer={DOMNodePreview} dataIterator={domIterator} {...props} />;
+const DOMInspector: FC<DOMInspectorProps> = (props) => {
+  const { getTagName } = props;
+  const [nodeRenderer, domIterator] = useMemo(() => {
+    const renderer = createDOMNodePreview(props.getTagName);
+    const iterator = createDOMIterator(props.getTagName);
+    return [renderer, iterator];
+  }, [props]) as any;
+  return <TreeView nodeRenderer={nodeRenderer} dataIterator={domIterator} {...props} />;
 };
 
 // DOMInspector.propTypes = {

@@ -64,7 +64,22 @@ const ConnectedTreeNode = memo<any>((props) => {
 //   nodeRenderer: PropTypes.func,
 // };
 
-export const TreeView = memo<any>(({ name, data, dataIterator, nodeRenderer, expandPaths, expandLevel }) => {
+export interface TreeViewData<T = unknown> {
+  name: string;
+  data: T;
+  isCloseTag?: boolean;
+}
+
+export interface TreeViewProps<T = unknown> {
+  name: string;
+  data: T;
+  dataIterator?: (data: unknown) => Generator<TreeViewData<T>>;
+  nodeRenderer?: (props: unknown) => React.ReactNode;
+  expandPaths?: string | string[];
+  expandLevel?: number;
+}
+
+export const TreeView = memo(({ name, data, dataIterator, nodeRenderer, expandPaths, expandLevel }: TreeViewProps) => {
   const styles = useStyles('TreeView');
   const stateAndSetter = useState({});
   const [, setExpandedPaths] = stateAndSetter;

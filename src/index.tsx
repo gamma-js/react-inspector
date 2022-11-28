@@ -2,7 +2,7 @@ export { chromeLight, chromeDark } from './styles/themes';
 
 import { ObjectInspector } from './object-inspector/ObjectInspector';
 import { TableInspector } from './table-inspector/TableInspector';
-import { DOMInspector } from './dom-inspector/DOMInspector';
+import { DOMInspector, DOMNodeLike, DOMInspectorProps } from './dom-inspector/DOMInspector';
 
 import { ObjectLabel } from './object-inspector/ObjectLabel';
 import { ObjectPreview } from './object-inspector/ObjectPreview';
@@ -11,7 +11,18 @@ import { ObjectRootLabel } from './object-inspector/ObjectRootLabel';
 import { ObjectValue } from './object/ObjectValue';
 import { ObjectName } from './object/ObjectName';
 
-export { TableInspector, ObjectInspector, ObjectLabel, ObjectPreview, ObjectRootLabel, ObjectValue, ObjectName };
+export {
+  TableInspector,
+  ObjectInspector,
+  ObjectLabel,
+  ObjectPreview,
+  ObjectRootLabel,
+  ObjectValue,
+  ObjectName,
+  DOMInspector,
+  DOMInspectorProps,
+  DOMNodeLike,
+};
 
 import React, { ComponentProps, FC } from 'react';
 import isDOM from 'is-dom';

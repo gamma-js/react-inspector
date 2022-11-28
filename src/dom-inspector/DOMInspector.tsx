@@ -49,12 +49,12 @@ export interface DOMNodeLike {
 
 export interface DOMInspectorProps extends TreeViewProps<DOMNodeLike> {
   getTagName?: (node: DOMNodeLike) => string;
+  filterAttr?: (key: string, value: string) => boolean;
 }
 
 const DOMInspector: FC<DOMInspectorProps> = (props) => {
-  const { getTagName } = props;
   const [nodeRenderer, domIterator] = useMemo(() => {
-    const renderer = createDOMNodePreview(props.getTagName);
+    const renderer = createDOMNodePreview(props.getTagName, props.filterAttr);
     const iterator = createDOMIterator(props.getTagName);
     return [renderer, iterator];
   }, [props]) as any;

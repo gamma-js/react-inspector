@@ -4,7 +4,7 @@ import { useStyles } from '../styles';
 import { DOMNodeLike } from './DOMInspector';
 import { shouldInline } from './shouldInline';
 
-const OpenTag: FC<any> = ({ tagName, attributes, styles }) => {
+const OpenTag: FC<any> = ({ tagName, attributes, styles, filterAttr }) => {
   return (
     <span style={styles.base}>
       {'<'}
@@ -15,15 +15,17 @@ const OpenTag: FC<any> = ({ tagName, attributes, styles }) => {
           const attributeNodes: ReactChild[] = [];
           for (let i = 0; i < attributes.length; i++) {
             const attribute = attributes[i];
-            attributeNodes.push(
-              <span key={i}>
-                {' '}
-                <span style={styles.htmlAttributeName}>{attribute.name}</span>
-                {'="'}
-                <span style={styles.htmlAttributeValue}>{attribute.value}</span>
-                {'"'}
-              </span>
-            );
+            if (typeof filterAttr !== 'function' || filterAttr(attribute.name, attribute.key)) {
+              attributeNodes.push(
+                <span key={i}>
+                  {' '}
+                  <span style={styles.htmlAttributeName}>{attribute.name}</span>
+                  {'="'}
+                  <span style={styles.htmlAttributeValue}>{attribute.value}</span>
+                  {'"'}
+                </span>
+              );
+            }
           }
           return attributeNodes;
         }
@@ -53,7 +55,10 @@ const nameByNodeType = {
   11: 'DOCUMENT_FRAGMENT_NODE',
 };
 
-export function createDOMNodePreview(getTagName = (n: DOMNodeLike) => n.tagName) {
+export function createDOMNodePreview(
+  getTagName = (n: DOMNodeLike) => n.tagName,
+  filterAttr?: (key: string, value: string) => boolean
+) {
   return ({ isCloseTag, data, expanded }) => {
     const styles = useStyles('DOMNodePreview');
 
@@ -66,7 +71,12 @@ export function createDOMNodePreview(getTagName = (n: DOMNodeLike) => n.tagName)
       case Node.ELEMENT_NODE:
         return (
           <span>
-            <OpenTag tagName={tagName} attributes={data.attributes} styles={styles.htmlOpenTag} />
+            <OpenTag
+              tagName={tagName}
+              attributes={data.attributes}
+              filterAttr={filterAttr}
+              styles={styles.htmlOpenTag}
+            />
 
             {shouldInline(data) ? data.textContent : !expanded && '…'}
 

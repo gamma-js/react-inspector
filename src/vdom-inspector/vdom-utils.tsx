@@ -15,7 +15,6 @@ export function getDisplayName(node: React.ReactNode) {
     return JSON.stringify(node);
   }
 
-  console.log(ReactIs.typeOf(node));
   if (ReactIs.isElement(node)) {
     const { type } = node;
 

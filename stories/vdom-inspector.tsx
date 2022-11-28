@@ -21,9 +21,8 @@ class ClassComponent extends React.Component {
   }
 }
 
-const nop = () => {
-  console.log('');
-};
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const nop = () => {};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ForwardFoo = React.forwardRef<HTMLDivElement, FooProps>((props, ref) => <div ref={ref}>forward ref</div>);
